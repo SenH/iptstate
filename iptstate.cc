@@ -245,14 +245,14 @@ bool check_ip(const char *arg, in6_addr *addr, uint8_t *family, uint8_t *netmask
     memcpy(ip, arg, ip_len);
     ip[ip_len] = '\0';
 
-    const char *arg_net = arg + ip_len + 1;
-    if(arg_net[0] == '\0')
+    const char *net_arg = arg + ip_len + 1;
+    if (net_arg[0] == '\0')
       return false;
-    int tmp = atoi(arg_net);
-    if (tmp < 0 || tmp > 128)
+    int net_int = atoi(net_arg);
+    if (net_int < 0 || net_int > 128)
       return false; // Max IPv6 prefix length
     *has_netmask = true;
-    *netmask = (uint8_t) tmp;
+    *netmask = (uint8_t) net_int;
   }
 
   // Get IP
@@ -277,7 +277,6 @@ bool check_ip(const char *arg, in6_addr *addr, uint8_t *family, uint8_t *netmask
  * https://gist.github.com/duedal/b83303b4988a4afb2a75
  */
 bool match_netmask(uint8_t family, const in6_addr &address, const in6_addr &network, uint8_t bits) {
-
   if (family == AF_INET) {
     if (bits == 0) {
       // C99 6.5.7 (3): u32 << 32 is undefined behaviour
